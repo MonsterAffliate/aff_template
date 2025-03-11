@@ -1,0 +1,26 @@
+services:
+  {{project_name}}-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /home/gz/data/{{project_name}}/assets:/workspace/{{project_name}}/assets  # Static source
+      - /home/gz/data/{{project_name}}/media:/workspace/{{project_name}}/media  # Collected static
+      - /home/gz/data/{{project_name}}/logs:/workspace/{{project_name}}/logs  # Logs
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_ENV=${DJANGO_ENV}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - DEBUG=${DEBUG}
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn web_django.wsgi:application --bind 0.0.0.0:8000"
+    networks:
+      - aff_infra_proxy-network
+
+networks:
+  aff_infra_proxy-network:
+    external: true
