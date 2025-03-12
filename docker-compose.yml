@@ -10,7 +10,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_ENV=${DJANGO_ENV}
+      - DJANGO_SETTINGS_MODULE=web_django.settings.prod
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - DEBUG=${DEBUG}
