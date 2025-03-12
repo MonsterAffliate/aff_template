@@ -6,7 +6,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Set work directory
-WORKDIR /workspace/{{ project_name | upper}}
+WORKDIR /workspace/{{ project_name}}
 
 # Copy project
 COPY . /workspace/{{ project_name }}/
