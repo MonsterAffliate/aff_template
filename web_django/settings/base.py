@@ -11,6 +11,9 @@ if not SECRET_KEY:
     raise ValueError("SECRET_KEY must be set in the environment.")
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+CSRF_TRUSTED_ORIGINS = ['https://{{ project_name }}.com',
+                        'https://*.{{ project_name }}.com']
+CSRF_COOKIE_DOMAIN = '.{{ project_name }}.com'
 
 ALLOWED_HOSTS = []
 

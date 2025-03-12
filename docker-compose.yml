@@ -20,6 +20,25 @@ services:
              gunicorn web_django.wsgi:application --bind 0.0.0.0:8000"
     networks:
       - aff_infra_proxy-network
+  {{ project_name }}-proxy:
+    image: nginx:latest
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /home/gz/data/{{ project_name }}/assets/:/home/gz/data/{{ project_name }}/assets/
+      - /home/gz/data/{{ project_name }}/media/:/home/gz/data/{{ project_name }}/media/
+    command: ["nginx", "-g", "daemon off;"]
+    networks:
+      - aff_infra_proxy-network
+    depends_on:
+      - {{ project_name }}-web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.{{ project_name }}.rule=Host(`staging.{{ project_name }}.com`) || Host(`{{ project_name }}.com`) || Host(`www.{{ project_name }}.com`)
+      - traefik.http.routers.{{ project_name }}.entrypoints=websecure
+      - traefik.http.routers.{{ project_name }}.tls=true
+      - traefik.http.routers.{{ project_name }}.tls.certresolver=myresolver
+      - traefik.http.services.{{ project_name }}-proxy.loadbalancer.server.port=80
 
 networks:
   aff_infra_proxy-network:
